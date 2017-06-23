@@ -19,10 +19,19 @@ gulp.task('watch', function(){
 	watch('./app/assets/styles/**/*.css', function(){
 		gulp.start('cssInject');
 	});
+
+	//watch for changes to javascript files
+	watch('./app/assets/scripts/**/*.js', function() {
+		gulp.start('scriptsRefresh'); //calls the gulp task that will then refresh the page
+	});
 });
 
 
 gulp.task('cssInject', ['styles']/*<--dependencies*/, function() {
 	return gulp.src('./app/temp/styles/styles.css')
 	.pipe(browserSync.stream()); //injects the css directly into browser (without refresh)
+});
+
+gulp.task('scriptsRefresh', ['scripts'], function(){
+	browserSync.reload();
 });
