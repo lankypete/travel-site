@@ -19,11 +19,11 @@ class StickyHeader {
 	}
 
 	refreshWaypoints() {
-		//.load() means everytime an object (image) gets loaded in, do something
-		this.lazyImages.load(function(){
-			//Waypoint has a method to refresh all waypoints
-			Waypoint.refreshAll();
-		});
+		//.on('load') means everytime an object (image) gets loaded in, do something
+		this.lazyImages.on("load", function() {
+		  	//Waypoint has a method to refresh all waypoints
+		    Waypoint.refreshAll();
+		 });
 	}
 
 	addSmoothScrolling() {

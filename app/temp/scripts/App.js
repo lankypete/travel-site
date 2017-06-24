@@ -11285,8 +11285,8 @@ var StickyHeader = function () {
 	_createClass(StickyHeader, [{
 		key: 'refreshWaypoints',
 		value: function refreshWaypoints() {
-			//.load() means everytime an object (image) gets loaded in, do something
-			this.lazyImages.load(function () {
+			//.on('load') means everytime an object (image) gets loaded in, do something
+			this.lazyImages.on("load", function () {
 				//Waypoint has a method to refresh all waypoints
 				Waypoint.refreshAll();
 			});
