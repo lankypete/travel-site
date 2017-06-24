@@ -12,19 +12,19 @@ gulp.task('previewDist', function(){
 	browserSync.init({
 		notify: false,
 		server: {
-			baseDir : "dist" //the base folder
+			baseDir : "docs" //the base folder
 		}
 	});
 });
 
 
 //task to delete the dist folder before running
-gulp.task('deleteDistFolder', function(){
-	return del("./dist");
+gulp.task('deleteDistFolder',['icons'/*may as well rebuild sprite*/], function(){
+	return del("./docs"); //use docs instead of dist for gh-pages
 });
 
 //task to cope all other folders that files that may be require (maybe in a wordpress site)
-gulp.task('copyGeneralFiles', ['deleteDistFolder', 'icons'/*may as well rebuild sprite*/], function(){
+gulp.task('copyGeneralFiles', ['deleteDistFolder'], function(){
 	var pathsToCopy = [
 		'./app//**/*',
 		'!./app/index.html',
@@ -36,7 +36,7 @@ gulp.task('copyGeneralFiles', ['deleteDistFolder', 'icons'/*may as well rebuild 
 	]
 
 	return gulp.src(pathsToCopy)
-		.pipe(gulp.dest("./dist"))
+		.pipe(gulp.dest("./docs"))
 });
 
 //copy all images to dist folder and compress the images
@@ -50,11 +50,16 @@ gulp.task('optimizeImages', ['deleteDistFolder', 'styles', 'scripts'/*this trigg
 			interlaced: true,
 			multipass: true
 		}))
-		.pipe(gulp.dest("./dist/assets/images"));
+		.pipe(gulp.dest("./docs/assets/images"));
+});
+
+//a task to trigger usemin for some dependancie reasons
+gulp.task('useminTrigger', ['deleteDistFolder'], function() {
+	gulp.start("usemin");
 });
 
 //usemin task to minimize and move scripts and styles
-gulp.task('usemin',['deleteDistFolder'], function() {
+gulp.task('usemin', function() {
 	return gulp.src("./app/index.html")
 		.pipe(usemin({
 			css: [function(){
@@ -71,11 +76,11 @@ gulp.task('usemin',['deleteDistFolder'], function() {
 				return uglify();
 			}]
 		}))
-		.pipe(gulp.dest("./dist"));
+		.pipe(gulp.dest("./docs"));
 });
 
 //this task will be called and won't do anything, just run other tasks
-gulp.task('build', ['deleteDistFolder', 'copyGeneralFiles', 'optimizeImages', 'usemin']);
+gulp.task('build', ['deleteDistFolder', 'copyGeneralFiles', 'optimizeImages', 'useminTrigger']);
 
 
 
