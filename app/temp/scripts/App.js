@@ -11270,6 +11270,8 @@ var StickyHeader = function () {
 	function StickyHeader() {
 		_classCallCheck(this, StickyHeader);
 
+		//this first one is a fix because lazyloading messess with the waypoints
+		this.lazyImages = (0, _jquery2.default)('.lazyload');
 		this.siteHeader = (0, _jquery2.default)('.site-header');
 		this.headerTriggerElement = (0, _jquery2.default)('.large-hero__title');
 		this.pageSections = (0, _jquery2.default)('.page-section');
@@ -11277,9 +11279,19 @@ var StickyHeader = function () {
 		this.createHeaderWaypoint(); //So the this method runs as soon as the page loads
 		this.createPageSectionWaypoints();
 		this.addSmoothScrolling();
+		this.refreshWaypoints();
 	}
 
 	_createClass(StickyHeader, [{
+		key: 'refreshWaypoints',
+		value: function refreshWaypoints() {
+			//.load() means everytime an object (image) gets loaded in, do something
+			this.lazyImages.load(function () {
+				//Waypoint has a method to refresh all waypoints
+				Waypoint.refreshAll();
+			});
+		}
+	}, {
 		key: 'addSmoothScrolling',
 		value: function addSmoothScrolling() {
 			//call the smooth-scroll library on all header links

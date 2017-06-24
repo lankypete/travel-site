@@ -5,6 +5,8 @@ import smoothScroll from 'jquery-smooth-scroll';
 class StickyHeader {
 
 	constructor() {
+		//this first one is a fix because lazyloading messess with the waypoints
+		this.lazyImages = $('.lazyload');
 		this.siteHeader = $('.site-header');
 		this.headerTriggerElement = $('.large-hero__title');
 		this.pageSections = $('.page-section');
@@ -12,7 +14,16 @@ class StickyHeader {
 		this.createHeaderWaypoint(); //So the this method runs as soon as the page loads
 		this.createPageSectionWaypoints();
 		this.addSmoothScrolling();
+		this.refreshWaypoints();
 		
+	}
+
+	refreshWaypoints() {
+		//.load() means everytime an object (image) gets loaded in, do something
+		this.lazyImages.load(function(){
+			//Waypoint has a method to refresh all waypoints
+			Waypoint.refreshAll();
+		});
 	}
 
 	addSmoothScrolling() {
